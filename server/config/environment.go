@@ -30,6 +30,7 @@ type envVars struct {
 	SESSION_COOKIE_SECURE      bool
 	SESSION_COOKIE_MAX_AGE     int
 	SAVE_CONTAINER             bool
+	ENVIRONMENT_NAME           string
 }
 
 var environment envVars
@@ -55,9 +56,17 @@ func GetEnvironment() envVars {
 	environment.SESSION_COOKIE_SECURE = true
 	environment.SESSION_COOKIE_MAX_AGE = 0 // 0 to make it a session cookie
 	environment.SAVE_CONTAINER = false
+	environment.ENVIRONMENT_NAME = Args.Environment // default value is 'production' - set in args.go
 
 	env := envs.EnvConfig{}
 	env.ReadEnvs()
+
+	switch environment.ENVIRONMENT_NAME {
+	case "production", "development":
+		log.Info("ENVIRONMENT_NAME set to: ", environment.ENVIRONMENT_NAME)
+	default:
+		log.Fatal("Invalid ENVIRONMENT_NAME set.")
+	}
 
 	environment.SUBSCRIPTION = env.Get("AZURE_SUBSCRIPTION_ID")
 	if environment.SUBSCRIPTION == "" {
