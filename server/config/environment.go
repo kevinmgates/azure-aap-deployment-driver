@@ -56,17 +56,20 @@ func GetEnvironment() envVars {
 	environment.SESSION_COOKIE_SECURE = true
 	environment.SESSION_COOKIE_MAX_AGE = 0 // 0 to make it a session cookie
 	environment.SAVE_CONTAINER = false
-	environment.ENVIRONMENT_NAME = Args.Environment // default value is 'production' - set in args.go
+	environment.ENVIRONMENT_NAME = ""
 
 	env := envs.EnvConfig{}
 	env.ReadEnvs()
 
-	switch environment.ENVIRONMENT_NAME {
-	case "production", "development":
-		log.Info("ENVIRONMENT_NAME set to: ", environment.ENVIRONMENT_NAME)
-	default:
-		log.Fatal("Invalid ENVIRONMENT_NAME set.")
+	if Args.Environment != "" { // env arg was passed
+		environment.ENVIRONMENT_NAME = GetEnvironmentFromArgs(Args.Environment) // returns environment name
+	} else { // no env args passed
+		environment.ENVIRONMENT_NAME = env.Get("ENVIRONMENT_NAME") // get envs from the config file
 	}
+	if environment.ENVIRONMENT_NAME == "" { // check if set from args or env, if not, default to production
+		environment.ENVIRONMENT_NAME = "production"
+	}
+	log.Info("ENVIRONMENT_NAME set to: ", environment.ENVIRONMENT_NAME)
 
 	environment.SUBSCRIPTION = env.Get("AZURE_SUBSCRIPTION_ID")
 	if environment.SUBSCRIPTION == "" {
@@ -201,4 +204,13 @@ func GetEnvironment() envVars {
 	}
 
 	return environment
+}
+
+func GetEnvironmentFromArgs(envArgs string) string {
+	switch envArgs {
+	case "production", "development":
+		return envArgs
+	default:
+		return ""
+	}
 }
