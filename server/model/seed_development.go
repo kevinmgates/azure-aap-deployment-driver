@@ -2,7 +2,8 @@ package model
 
 import (
 	"encoding/json"
-	"fmt"
+
+	log "github.com/sirupsen/logrus"
 
 	_ "gorm.io/driver/sqlite"
 )
@@ -152,6 +153,6 @@ func LoadSeedData(dbString string) string {
     ]`
 	var mySteps []Step
 	json.Unmarshal([]byte(seedData), &mySteps)
-	fmt.Printf("mySteps : %+v", mySteps)
+	log.Info("mySteps : %+v", mySteps)
 	return "you gave me: " + dbString
 }
