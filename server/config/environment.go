@@ -73,32 +73,32 @@ func GetEnvironment() envVars {
 
 	environment.SUBSCRIPTION = env.Get("AZURE_SUBSCRIPTION_ID")
 	if environment.SUBSCRIPTION == "" {
-		log.Fatal("AZURE_SUBSCRIPTION_ID environment variable must be set.")
+		// log.Fatal("AZURE_SUBSCRIPTION_ID environment variable must be set.")
 	}
 
 	environment.RESOURCE_GROUP_NAME = env.Get("RESOURCE_GROUP_NAME")
 	if environment.RESOURCE_GROUP_NAME == "" {
-		log.Fatal("RESOURCE_GROUP_NAME environment variable must be set.")
+		// log.Fatal("RESOURCE_GROUP_NAME environment variable must be set.")
 	}
 
 	environment.STORAGE_ACCOUNT_NAME = env.Get("STORAGE_ACCOUNT_NAME")
 	if environment.STORAGE_ACCOUNT_NAME == "" {
-		log.Fatal("STORAGE_ACCOUNT_NAME environment variable must be set.")
+		// log.Fatal("STORAGE_ACCOUNT_NAME environment variable must be set.")
 	}
 
 	environment.CONTAINER_GROUP_NAME = env.Get("CONTAINER_GROUP_NAME")
 	if environment.CONTAINER_GROUP_NAME == "" {
-		log.Fatal("CONTAINER_GROUP_NAME environment variable must be set.")
+		// log.Fatal("CONTAINER_GROUP_NAME environment variable must be set.")
 	}
 
 	environment.PASSWORD = env.Get("ADMIN_PASS")
 	if environment.PASSWORD == "" {
-		log.Fatal("ADMIN_PASS environment variable must be set.")
+		// log.Fatal("ADMIN_PASS environment variable must be set.")
 	}
 
 	mainOutputsString := env.Get("MAIN_OUTPUTS")
 	if mainOutputsString == "" {
-		log.Fatal("MAIN_OUTPUTS environment variable must be set.")
+		// log.Fatal("MAIN_OUTPUTS environment variable must be set.")
 	}
 	environment.MAIN_OUTPUTS = mainOutputsString
 

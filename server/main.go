@@ -14,6 +14,8 @@ import (
 
 func main() {
 	config.ConfigureLogging()
+	log.Info("Calling ParseArgs:")
+
 	config.ParseArgs()
 
 	loadData := model.LoadSeedData(config.GetEnvironment().ENVIRONMENT_NAME)

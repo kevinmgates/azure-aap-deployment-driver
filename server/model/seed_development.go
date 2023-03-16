@@ -2,13 +2,13 @@ package model
 
 import (
 	"encoding/json"
+	"strconv"
 
-	log "github.com/sirupsen/logrus"
-
-	_ "gorm.io/driver/sqlite"
+	// "server/persistence"
+	"fmt"
 )
 
-func LoadSeedData(dbString string) string {
+func LoadSeedData(database string) string {
 	seedData := `
     [
         {
@@ -153,6 +153,28 @@ func LoadSeedData(dbString string) string {
     ]`
 	var mySteps []Step
 	json.Unmarshal([]byte(seedData), &mySteps)
-	log.Info("mySteps : %+v", mySteps)
-	return "you gave me: " + dbString
+	// database = persistence.NewInMemoryDB()
+
+	for index, element := range mySteps { // for each step...
+		//save the step
+		fmt.Println(`Found step ` + strconv.Itoa(index) + ": " + element.Name)
+		// database.Instance.Save(element)
+
+		//loop through the executions and save each one
+		for _, elementE := range element.Executions {
+			fmt.Println("  Found execution: ", elementE.Status)
+			// database.Instance.Save(elementE)
+		}
+	}
+
+	// Check if it saved
+	//db.First(&step, 1)
+	//fmt.Println("*** Reading database: ", db.First(&step, 1))
+
+	// sqlDb, _ := db.Instance.DB()
+	// sqlDb.Close()
+	return ("done")
 }
+
+//log.Info(index, "###Executions: ", element.Executions[0:len(element.Executions)])
+// log.Info("mySteps : %+v", mySteps)

@@ -4,6 +4,10 @@ INSTALLER_WEBUI_DIR := ui
 CONTAINER_REGISTRY_DEFAULT_NAMESPACE ?= aoc-${USER}
 IMAGE_NAME ?= installer
 IMAGE_TAG ?= latest
+CONTAINER_REGISTRY_DEFAULT_SERVER = "aapkgates.azurecr.io"
+CONTAINER_REGISTRY_PASSWORD = "OyVf03K1hXLiQNh+T5sfsISXhds7e9Hg/9l+PGu0ZD+ACRAaQWD0"
+CONTAINER_REGISTRY_USERNAME = "aapkgates"
+AZURE_SUBSCRIPTION_ID = "d154d7d9-3ab7-4cb0-8cf6-c9c356acbd2d"
 
 .PHONY: clean assemble save-image push-image check-credentials build-server build-web-ui
 
