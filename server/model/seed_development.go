@@ -2,13 +2,14 @@ package model
 
 import (
 	"encoding/json"
+	"server/persistence"
 	"strconv"
 
 	// "server/persistence"
 	"fmt"
 )
 
-func LoadSeedData(database string) string {
+func LoadSeedData(db *persistence.Database) string {
 	seedData := `
     [
         {
@@ -153,26 +154,24 @@ func LoadSeedData(database string) string {
     ]`
 	var mySteps []Step
 	json.Unmarshal([]byte(seedData), &mySteps)
-	// database = persistence.NewInMemoryDB()
 
 	for index, element := range mySteps { // for each step...
 		//save the step
 		fmt.Println(`Found step ` + strconv.Itoa(index) + ": " + element.Name)
-		// database.Instance.Save(element)
+		db.Instance.Save(element)
 
 		//loop through the executions and save each one
 		for _, elementE := range element.Executions {
 			fmt.Println("  Found execution: ", elementE.Status)
-			// database.Instance.Save(elementE)
+			db.Instance.Save(elementE)
 		}
 	}
 
 	// Check if it saved
-	//db.First(&step, 1)
-	//fmt.Println("*** Reading database: ", db.First(&step, 1))
+	db.Instance.First(&mySteps, 1)
+	fmt.Println("*** Reading database: ", db.Instance.First(&mySteps, 1))
 
-	// sqlDb, _ := db.Instance.DB()
-	// sqlDb.Close()
+	defer db.Instance.DB()
 	return ("done")
 }
 

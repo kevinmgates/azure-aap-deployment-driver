@@ -14,14 +14,13 @@ import (
 
 func main() {
 	config.ConfigureLogging()
-	log.Info("Calling ParseArgs:")
-
 	config.ParseArgs()
 
-	loadData := model.LoadSeedData(config.GetEnvironment().ENVIRONMENT_NAME)
+	db := persistence.NewPersistentDB(config.GetEnvironment().DB_PATH)
+
+	loadData := model.LoadSeedData(db)
 	log.Info("Calling LoadSeedData: " + loadData)
 
-	db := persistence.NewPersistentDB(config.GetEnvironment().DB_PATH)
 	// TODO store first start up in DB so we can determine max allowed run time for installer
 
 	// Instantiate Azure clients and session
