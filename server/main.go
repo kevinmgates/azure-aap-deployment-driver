@@ -6,20 +6,13 @@ import (
 	"server/config"
 	"server/controllers"
 	"server/engine"
-	"server/model"
 	"server/persistence"
-
-	log "github.com/sirupsen/logrus"
 )
 
 func main() {
 	config.ConfigureLogging()
 	config.ParseArgs()
-
 	db := persistence.NewPersistentDB(config.GetEnvironment().DB_PATH)
-
-	loadData := model.LoadSeedData(db)
-	log.Info("Calling LoadSeedData: " + loadData)
 
 	// TODO store first start up in DB so we can determine max allowed run time for installer
 

@@ -61,15 +61,9 @@ func GetEnvironment() envVars {
 	env := envs.EnvConfig{}
 	env.ReadEnvs()
 
-	if Args.Environment != "" { // env arg was passed
-		environment.ENVIRONMENT_NAME = GetEnvironmentFromArgs(Args.Environment) // returns environment name
-	} else { // no env args passed
-		environment.ENVIRONMENT_NAME = env.Get("ENVIRONMENT_NAME") // get envs from the config file
-	}
-	if environment.ENVIRONMENT_NAME == "" { // check if set from args or env, if not, default to production
-		environment.ENVIRONMENT_NAME = "production"
-	}
-	log.Info("ENVIRONMENT_NAME set to: ", environment.ENVIRONMENT_NAME)
+	environment.ENVIRONMENT_NAME = getEnvironmentName(Args.Environment, env.Get("ENVIRONMENT_NAME"), ProductionEnvironment)
+
+	log.Infof("ENVIRONMENT_NAME set to: %s", environment.ENVIRONMENT_NAME)
 
 	environment.SUBSCRIPTION = env.Get("AZURE_SUBSCRIPTION_ID")
 	if environment.SUBSCRIPTION == "" {
@@ -206,11 +200,24 @@ func GetEnvironment() envVars {
 	return environment
 }
 
-func GetEnvironmentFromArgs(envArgs string) string {
-	switch envArgs {
-	case "production", "development":
-		return envArgs
-	default:
-		return ""
+const (
+	ProductionEnvironment  string = "production"
+	DevelopmentEnvironment string = "development"
+)
+
+func getEnvironmentName(flagValue string, envValue string, defaultValue string) string {
+	name := flagValue
+	if isValidEnvironmentName(name) {
+		return name
 	}
+	name = envValue
+
+	if isValidEnvironmentName(name) {
+		return name
+	}
+	return defaultValue
+}
+
+func isValidEnvironmentName(name string) bool {
+	return name == ProductionEnvironment || name == DevelopmentEnvironment
 }

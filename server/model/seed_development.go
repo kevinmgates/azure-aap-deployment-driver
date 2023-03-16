@@ -2,14 +2,12 @@ package model
 
 import (
 	"encoding/json"
-	"server/persistence"
-	"strconv"
 
-	// "server/persistence"
-	"fmt"
+	log "github.com/sirupsen/logrus"
+	"gorm.io/gorm"
 )
 
-func LoadSeedData(db *persistence.Database) string {
+func LoadSeedData(db *gorm.DB) {
 	seedData := `
     [
         {
@@ -152,28 +150,10 @@ func LoadSeedData(db *persistence.Database) string {
             "executions": []
         }
     ]`
-	var mySteps []Step
-	json.Unmarshal([]byte(seedData), &mySteps)
+	var data []Step
+	json.Unmarshal([]byte(seedData), &data)
 
-	for index, element := range mySteps { // for each step...
-		//save the step
-		fmt.Println(`Found step ` + strconv.Itoa(index) + ": " + element.Name)
-		db.Instance.Save(element)
-
-		//loop through the executions and save each one
-		for _, elementE := range element.Executions {
-			fmt.Println("  Found execution: ", elementE.Status)
-			db.Instance.Save(elementE)
-		}
+	if result := db.Save(&data); result.Error != nil {
+		log.Errorf("Error seeding data: %v", result.Error)
 	}
-
-	// Check if it saved
-	db.Instance.First(&mySteps, 1)
-	fmt.Println("*** Reading database: ", db.Instance.First(&mySteps, 1))
-
-	defer db.Instance.DB()
-	return ("done")
 }
-
-//log.Info(index, "###Executions: ", element.Executions[0:len(element.Executions)])
-// log.Info("mySteps : %+v", mySteps)

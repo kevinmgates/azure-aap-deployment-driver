@@ -1,6 +1,7 @@
 package persistence
 
 import (
+	"server/config"
 	"server/model"
 
 	log "github.com/sirupsen/logrus"
@@ -15,6 +16,9 @@ func NewPersistentDB(dbPath string) *Database {
 	db, err := newDB(dbPath)
 	if err != nil {
 		log.Fatalf("Could not open database %s. Error: %v", dbPath, err)
+	}
+	if config.GetEnvironment().ENVIRONMENT_NAME == config.DevelopmentEnvironment {
+		model.LoadSeedData(db.Instance)
 	}
 	return db
 }
